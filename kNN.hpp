@@ -73,7 +73,6 @@ public:
 
     void insert(int index, T value) override {
         if (index < 0 || index > size) {
-            std::cerr << "Error: Index out of bounds\n";
             return;
         }
         if (index == 0) {
@@ -96,7 +95,6 @@ public:
 
     void remove(int index) override {
         if (index < 0 || index >= size) {
-            std::cerr << "Error: Index out of bounds\n";
             return;
         }
         Node* temp;
@@ -127,10 +125,8 @@ public:
 
     T& get(int index) const override {
         if (index < 0 || index >= size) {
-            std::cerr << "Error: Index out of bounds\n";
-            // Returning a reference to a temporary here is not ideal,
-            // but for simplicity, assuming the calling code handles it properly.
-            return tail->data; // Just to return some reference
+            throw std::out_of_range("Out of range")
+            return nullptr;
         }
         Node* current = head;
         for (int i = 0; i < index; ++i) {
@@ -156,10 +152,13 @@ public:
     void print() const override {
         Node* current = head;
         while (current != nullptr) {
-            std::cout << current->data << " ";
+            if (current->next != nullptr) {
+                cout << current->data << " ";
+            } else {
+                cout << current->data; // Last element => no trailing space at the end
+            }
             current = current->next;
         }
-        std::cout << std::endl;
     }
 
     void reverse() override {
