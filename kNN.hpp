@@ -4,6 +4,10 @@
  *       in this assignment. The below structures are just some suggestions.
  */
 
+////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////// LIST INTERFACE AND DLINKEDLIST IMPLEMENTATION //////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+
 template<typename T>
 class List {
 public:
@@ -18,6 +22,164 @@ public:
     virtual void print() const = 0;
     virtual void reverse() = 0;
 };
+
+
+template<typename T>
+class DoublyLinkedList : public List<T> {
+private:
+    class Node {
+    public:
+        T data;
+        Node* next;
+        Node* prev;
+
+        Node(T value) : data(value), next(nullptr), prev(nullptr) {}
+    };
+
+    Node* head;
+    Node* tail;
+    int size;
+
+public:
+    DoublyLinkedList() : head(nullptr), tail(nullptr), size(0) {}
+
+    ~DoublyLinkedList() {
+        clear();
+    }
+
+    void push_back(T value) override {
+        Node* newNode = new Node(value);
+        if (head == nullptr) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            newNode->prev = tail;
+            tail = newNode;
+        }
+        size++;
+    }
+
+    void push_front(T value) override {
+        Node* newNode = new Node(value);
+        if (head == nullptr) {
+            head = tail = newNode;
+        } else {
+            newNode->next = head;
+            head->prev = newNode;
+            head = newNode;
+        }
+        size++;
+    }
+
+    void insert(int index, T value) override {
+        if (index < 0 || index > size) {
+            std::cerr << "Error: Index out of bounds\n";
+            return;
+        }
+        if (index == 0) {
+            push_front(value);
+        } else if (index == size) {
+            push_back(value);
+        } else {
+            Node* newNode = new Node(value);
+            Node* current = head;
+            for (int i = 0; i < index - 1; ++i) {
+                current = current->next;
+            }
+            newNode->next = current->next;
+            newNode->prev = current;
+            current->next->prev = newNode;
+            current->next = newNode;
+            size++;
+        }
+    }
+
+    void remove(int index) override {
+        if (index < 0 || index >= size) {
+            std::cerr << "Error: Index out of bounds\n";
+            return;
+        }
+        Node* temp;
+        if (index == 0) {
+            temp = head;
+            head = head->next;
+            if (head != nullptr) {
+                head->prev = nullptr;
+            } else {
+                tail = nullptr;
+            }
+        } else if (index == size - 1) {
+            temp = tail;
+            tail = tail->prev;
+            tail->next = nullptr;
+        } else {
+            Node* current = head;
+            for (int i = 0; i < index; ++i) {
+                current = current->next;
+            }
+            temp = current;
+            current->prev->next = current->next;
+            current->next->prev = current->prev;
+        }
+        delete temp;
+        size--;
+    }
+
+    T& get(int index) const override {
+        if (index < 0 || index >= size) {
+            std::cerr << "Error: Index out of bounds\n";
+            // Returning a reference to a temporary here is not ideal,
+            // but for simplicity, assuming the calling code handles it properly.
+            return tail->data; // Just to return some reference
+        }
+        Node* current = head;
+        for (int i = 0; i < index; ++i) {
+            current = current->next;
+        }
+        return current->data;
+    }
+
+    int length() const override {
+        return size;
+    }
+
+    void clear() override {
+        while (head != nullptr) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+        }
+        tail = nullptr;
+        size = 0;
+    }
+
+    void print() const override {
+        Node* current = head;
+        while (current != nullptr) {
+            std::cout << current->data << " ";
+            current = current->next;
+        }
+        std::cout << std::endl;
+    }
+
+    void reverse() override {
+        Node* current = head;
+        Node* temp = nullptr;
+        while (current != nullptr) {
+            temp = current->prev;
+            current->prev = current->next;
+            current->next = temp;
+            current = current->prev;
+        }
+        if (temp != nullptr) {
+            head = temp->prev;
+        }
+    }
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////// DATASET CLASS FORWARD DECLARATION ////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
 
 class Dataset {
 private:
@@ -36,6 +198,10 @@ public:
     bool drop(int axis = 0, int index = 0, std::string columns = "");
     Dataset extract(int startRow = 0, int endRow = -1, int startCol = 0, int endCol = -1) const;
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////// kNN CLASS FORWARD DECLARATION //////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
 
 class kNN {
 private:

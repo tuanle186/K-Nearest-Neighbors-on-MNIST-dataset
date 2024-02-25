@@ -1,5 +1,6 @@
 #include "kNN.hpp"
 
+/*
 void tc1(){
     Dataset dataset;
     dataset.loadFromCSV("mnist.csv");
@@ -19,9 +20,19 @@ void tc1(){
     Dataset y_pred = knn.predict(X_test);
     double accuracy = knn.score(y_test, y_pred);
     cout << "Accuracy: " << accuracy << endl;
+} */
+
+void tc2() {
+    DoublyLinkedList<int>* list = new DoublyLinkedList<int>();
+    list->push_back(1);
+    list->push_back(3);
+    list->push_front(2);
+    list->print();
+    list->clear();
+    list->print();
 }
 
 int main() {
-    tc1();
+    tc2();
     return 0;
 }
