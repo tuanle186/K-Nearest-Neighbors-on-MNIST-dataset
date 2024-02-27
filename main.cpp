@@ -23,7 +23,7 @@ void tc1(){
 } */
 
 void tc2() {
-    DoublyLinkedList<int>* list = new DoublyLinkedList<int>();
+    DLinkedList<int>* list = new DLinkedList<int>();
     list->push_back(1);
     list->push_back(3);
     list->push_front(2);

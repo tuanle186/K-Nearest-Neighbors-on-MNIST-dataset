@@ -25,8 +25,8 @@ public:
 
 
 template<typename T>
-class DoublyLinkedList : public List<T> {
-private:
+class DLinkedList : public List<T> {
+public:
     class Node {
     public:
         T data;
@@ -35,15 +35,15 @@ private:
 
         Node(T value) : data(value), next(nullptr), prev(nullptr) {}
     };
-
+private:
     Node* head;
     Node* tail;
     int size;
 
 public:
-    DoublyLinkedList() : head(nullptr), tail(nullptr), size(0) {}
+    DLinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
-    ~DoublyLinkedList() {
+    ~DLinkedList() {
         clear();
     }
 
@@ -125,8 +125,7 @@ public:
 
     T& get(int index) const override {
         if (index < 0 || index >= size) {
-            throw std::out_of_range("Out of range")
-            return nullptr;
+            throw std::out_of_range("Out of range");
         }
         Node* current = head;
         for (int i = 0; i < index; ++i) {
@@ -182,7 +181,9 @@ public:
 
 class Dataset {
 private:
-    List<List<int>*>* data;
+    DLinkedList<DLinkedList<int>*>* data;
+    int nRows;
+    int nCols;
     //You may need to define more
 public:
     Dataset();
