@@ -5,7 +5,6 @@
 
 
 /* Status: Finished
- *  
  */
 Dataset::Dataset() {
     colName = new DLinkedList<string>();
@@ -16,7 +15,6 @@ Dataset::Dataset() {
 
 
 /* Status: Finished
- *  
  */
 Dataset::~Dataset() {
     clear();
@@ -25,8 +23,7 @@ Dataset::~Dataset() {
 }
 
 
-/* Status: Finished,
- * not yet implemented deep copy of other dataset
+/* Status: Finished
  */
 Dataset::Dataset(const Dataset& other) {
     colName = new DLinkedList<string>(*other.colName);
@@ -40,7 +37,6 @@ Dataset::Dataset(const Dataset& other) {
 
 
 /* Status: Finished
- *  
  */
 Dataset& Dataset::operator=(const Dataset& other) {
     // Check for self-assignment
@@ -64,13 +60,6 @@ Dataset& Dataset::operator=(const Dataset& other) {
 
 
 /* Status: Finished
- *
- * This method is used to load data from the file fileName, 
- * specifically in this assignment is the 'mnist.csv' file. 
- * The information in the file will be stored in the variable
- * data and other proposed variables by students.
- * 
- * It returns true if the data loading is successful, otherwise false.
  */
 bool DEBUG_dataset_loadFromCSV = false;
 bool Dataset::loadFromCSV(const char* fileName) {
@@ -111,18 +100,6 @@ bool Dataset::loadFromCSV(const char* fileName) {
 
 
 /* Status: Finished
- * Print the first nRows rows, and only print the first nCols columns of the data table.
-
- * • Print format:
- * – The first row prints the names of the columns of the data table.
- * – From the second row onwards, print the value of each cell in the table, each
- * element separated by a space, with no trailing space at the end of the line.
- * 
- * • Exceptions: 
- * If nRows is greater than the number of rows in the data table, print all
- * rows in the data table. If nCols is greater than the number of columns in the data
- * table, print all columns in the data table. If nRows or nCols is less than 0, do not
- * print anything.
 */
 bool DEBUG_dataset_printHead = false;
 void Dataset::printHead(int nRows, int nCols) const {
@@ -153,6 +130,8 @@ void Dataset::printHead(int nRows, int nCols) const {
 }
 
 
+/* Status: Finished
+*/
 void Dataset::printTail(int nRows, int nCols) const {
     if (nRows <= 0 || nCols <= 0) {
         return;
@@ -168,17 +147,23 @@ void Dataset::printTail(int nRows, int nCols) const {
 }
 
 
+/* Status: Finished
+*/
 void Dataset::getShape(int& nRows, int& nCols) const {
     nRows = this->nRows;
     nCols = this->nCols;
 }
 
 
+/* Status: Finished
+*/
 void Dataset::columns() const {
     colName->print();
 }
 
 
+/* Status: Finished
+*/
 void Dataset::clear() {
     if (nRows == 0 && nCols == 0) {
         return;
@@ -191,3 +176,4 @@ void Dataset::clear() {
     nRows = 0;
     nCols = 0;
 }
+
