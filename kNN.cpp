@@ -86,6 +86,7 @@ bool Dataset::loadFromCSV(const char* fileName) {
                 colName->push_back(token);
                 nCols++;
             }
+            nRows++;
             is1stRow = false;
         } else { // Not first Row
             DLinkedList<int>* newRow = new DLinkedList<int>();
@@ -96,7 +97,6 @@ bool Dataset::loadFromCSV(const char* fileName) {
             nRows++;
         }
     }
-    nRows++;
 
     if (DEBUG_dataset_loadFromCSV) {
         cout << "DEBUGGING Dataset::loadFromCSV\n";

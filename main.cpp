@@ -43,7 +43,10 @@ void tc2() {
 void tc3() { // Test Printing
     Dataset dataset;
     dataset.loadFromCSV("mnist.csv");
-    dataset.printTail(123123, 123123);
+    int nRows, nCols;
+    dataset.getShape(nRows, nCols);
+    cout << "nRows: " << nRows << endl;
+    cout << "nCols: " << nCols << endl;
 }
 
 int main() {
