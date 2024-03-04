@@ -53,8 +53,8 @@ Dataset::Dataset(const Dataset& other) {
 }
 
 
-/*
- *  Status: Not Finished
+/* Status: Not Finished
+ *  
  */
 Dataset& Dataset::operator=(const Dataset& other) {
 }
@@ -69,7 +69,7 @@ Dataset& Dataset::operator=(const Dataset& other) {
  * 
  * It returns true if the data loading is successful, otherwise false.
  */
-bool DEBUG_dataset_loadFromCSV = true;
+bool DEBUG_dataset_loadFromCSV = false;
 bool Dataset::loadFromCSV(const char* fileName) {
     ifstream file(fileName);
     if (!file) {
@@ -107,7 +107,7 @@ bool Dataset::loadFromCSV(const char* fileName) {
 }
 
 
-/* Status: Not Finished
+/* Status: Finished
  * Print the first nRows rows, and only print the first nCols columns of the data table.
 
  * • Print format:
@@ -121,20 +121,19 @@ bool Dataset::loadFromCSV(const char* fileName) {
  * table, print all columns in the data table. If nRows or nCols is less than 0, do not
  * print anything.
 */
-bool DEBUG_dataset_printHead = true;
+bool DEBUG_dataset_printHead = false;
 void Dataset::printHead(int nRows, int nCols) const {
-    if (nRows < 0 || nCols < 0) { // Do not print anything
+    if (nRows <= 0 || nCols <= 0) { // Do not print anything | Note: nRows = 0 || nCols = 0 do what??
         return;
     }
-
-    // int nRows = min(this->nRows, nRows);
-    // int nCols = min(this->nCols, nCols);
-
-    // for (int i = 0; i < nCols; ++i) {
-
-    // }
-
-
+    nRows = min(nRows, this->nRows - 1); // -1 as 1st row's stored in colName
+    nCols = min(nCols, this->nCols);
+    colName->printHead(nCols);
+    cout << endl;
+    for (int i = 0; i < nRows; ++i) {
+        data->get(i)->printHead(nCols);
+        cout << endl;
+    }
 
     // For the debugging only: Test printing all    
     if (DEBUG_dataset_printHead) {
@@ -151,9 +150,19 @@ void Dataset::printHead(int nRows, int nCols) const {
 }
 
 
-// void Dataset::printTail(int nRows = 5, int nCols = 5) const {
-
-// }
+void Dataset::printTail(int nRows, int nCols) const {
+    if (nRows <= 0 || nCols <= 0) {
+        return;
+    }
+    nRows = min(nRows, this->nRows - 1); // -1 as 1st row's stored in colName
+    nCols = min(nCols, this->nCols);
+    colName->printTail(nCols);
+    cout << endl;
+    for (int i = this->nRows - nRows - 1; i < this->nRows - 1; ++i) {
+        data->get(i)->printTail(nCols);
+        cout << endl;
+    }
+}
 
 
 void Dataset::getShape(int& nRows, int& nCols) const {

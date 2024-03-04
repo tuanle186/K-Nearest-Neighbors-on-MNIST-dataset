@@ -128,7 +128,7 @@ public:
 
     T& get(int index) const override {
         if (index < 0 || index >= size) {
-            throw std::out_of_range("Out of range");
+            throw std::out_of_range("get() Out of range");
         }
         Node* current = head;
         for (int i = 0; i < index; ++i) {
@@ -163,14 +163,12 @@ public:
         }
     }
 
-    /*
-     * Not finished, used to optimize printHead method of dataset
-     */
-    void printHead(int n) const override {
-        if (n < 0 || n > size) {
-            throw std::out_of_range("Out of range");
+    void printHead(int n=5) const override {
+        if (n <= 0) {
+            throw std::out_of_range("printHead Out of range");
             return;
         }
+        n = min(n, size);
         Node* current = head;
         for (int i = 0; i < n; ++i) {
             if (i < n - 1) {
@@ -182,14 +180,12 @@ public:
         }
     }
 
-    /*
-     * Not finished, used to optimize printTail method of dataset
-     */
-    void printTail(int n) const override {
-        if (n < 0 || n > size) {
-            throw std::out_of_range("Out of range");
+    void printTail(int n=5) const override {
+        if (n <= 0) {
+            throw std::out_of_range("printTail Out of range");
             return;
         }
+        n = min(n, size);
         Node* current = tail;
         for (int i = 0; i < n - 1; ++i) {
             current = current->prev;

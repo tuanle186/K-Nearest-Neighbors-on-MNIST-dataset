@@ -31,19 +31,19 @@ void tc2() {
     list->print();
     cout << endl;
 
-    cout << "Print head n = 3: ";
-    list->printHead(3);
+    cout << "Print head: ";
+    list->printHead(0);
     cout << endl;
 
-    cout << "Print tail n = 4: ";
-    list->printTail(4);
+    cout << "Print tail: ";
+    list->printTail(0);
     list->clear();
 }
 
 void tc3() { // Test Printing
     Dataset dataset;
     dataset.loadFromCSV("mnist.csv");
-    dataset.printHead();
+    dataset.printTail(123123, 123123);
 }
 
 int main() {
