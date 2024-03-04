@@ -19,19 +19,13 @@ Dataset::Dataset() {
  *  
  */
 Dataset::~Dataset() {
-    colName->clear();
+    clear();
     delete colName;
-    for (int i = 0; i < nRows - 1; ++i) {
-        data->get(i)->clear();
-    }
-    data->clear();
     delete data;
-    nRows = 0;
-    nCols = 0;
 }
 
 
-/* Status: Not Finished,
+/* Status: Finished,
  * not yet implemented deep copy of other dataset
  */
 Dataset::Dataset(const Dataset& other) {
@@ -49,6 +43,23 @@ Dataset::Dataset(const Dataset& other) {
  *  
  */
 Dataset& Dataset::operator=(const Dataset& other) {
+    // Check for self-assignment
+    if (this == &other) {
+        return *this;
+    }
+    if (nRows > 0 || nCols > 0) { // not empty
+        clear();
+    }
+    other.getShape(nRows, nCols);
+    delete colName;
+    colName = new DLinkedList<string>(*other.colName);
+    delete data;
+    data = new DLinkedList<DLinkedList<int>*>();
+    for (int i = 0; i < nRows - 1; ++i) {
+        DLinkedList<int>* newRow = new DLinkedList<int>(*other.data->get(i));
+        data->push_back(newRow);
+    }
+    return *this;
 }
 
 
@@ -162,7 +173,21 @@ void Dataset::getShape(int& nRows, int& nCols) const {
     nCols = this->nCols;
 }
 
+
 void Dataset::columns() const {
     colName->print();
 }
 
+
+void Dataset::clear() {
+    if (nRows == 0 && nCols == 0) {
+        return;
+    }
+    colName->clear();
+    for (int i = 0; i < nRows - 1; ++i) {
+        data->get(i)->clear();
+    }
+    data->clear();
+    nRows = 0;
+    nCols = 0;
+}

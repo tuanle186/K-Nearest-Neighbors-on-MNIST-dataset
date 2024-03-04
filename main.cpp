@@ -52,8 +52,8 @@ void tc3() { // Test Printing
 void tc4() {
     Dataset dataset;
     dataset.loadFromCSV("mnist.csv");
-    Dataset dataset2(dataset);
-    dataset2.printHead(1000, 1000);
+    Dataset dataset2 = dataset;
+    dataset2.printHead();
 }
 
 int main() {
