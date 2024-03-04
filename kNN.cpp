@@ -19,12 +19,15 @@ Dataset::Dataset() {
  *  
  */
 Dataset::~Dataset() {
+    colName->clear();
+    delete colName;
+    for (int i = 0; i < nRows - 1; ++i) {
+        data->get(i)->clear();
+    }
+    data->clear();
+    delete data;
     nRows = 0;
     nCols = 0;
-    colName->clear();
-    data->clear();
-    delete colName;
-    delete data;
 }
 
 
@@ -32,24 +35,13 @@ Dataset::~Dataset() {
  * not yet implemented deep copy of other dataset
  */
 Dataset::Dataset(const Dataset& other) {
-    /* 
-     * The data variable has not been dynamically allocated
-     * => Allocate new dynamic data
-    */
-    if (!data) data = new DLinkedList<DLinkedList<int>*>();
-    
-    /* 
-     * The data has ALREADY BEEN dynamically allocated but it is not empty
-     * => Clear the data
-    */
-    else if (nRows != 0 || nCols != 0) {
-        data->clear();
+    colName = new DLinkedList<string>(*other.colName);
+    data = new DLinkedList<DLinkedList<int>*>();
+    other.getShape(nRows, nCols);
+    for (int i = 0; i < nRows - 1; ++i) {
+        DLinkedList<int>* newRow = new DLinkedList<int>(*other.data->get(i));
+        data->push_back(newRow);
     }
-    
-    // If the PC is here, it means that the data var has been allocated and empty
-    // => Deep copy the other dataset
-    // Implement later
-    
 }
 
 

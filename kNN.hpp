@@ -46,6 +46,17 @@ private:
 public:
     DLinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
+    DLinkedList(const DLinkedList& other) {
+        head = nullptr;
+        tail = nullptr;
+        size = 0;
+        Node* current = other.head;
+        while (current != nullptr) {
+            push_back(current->data);
+            current = current->next;
+        }
+    }
+
     ~DLinkedList() {
         clear();
     }
@@ -222,10 +233,10 @@ public:
 
 class Dataset {
 private:
-    DLinkedList<string>* colName;
-    DLinkedList<DLinkedList<int>*>* data;
     int nRows;
     int nCols;
+    DLinkedList<string>* colName;
+    DLinkedList<DLinkedList<int>*>* data;
     //You may need to define more
 public:
     Dataset();

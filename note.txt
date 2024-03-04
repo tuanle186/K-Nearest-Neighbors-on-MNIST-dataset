@@ -1,0 +1,2 @@
+1. Reimplement ~Dataset(), memory has not been deallocated properly yet
+2. Try to implement the get() method of linkedlist so that when accessing data from dataset, the complexity is O(1)

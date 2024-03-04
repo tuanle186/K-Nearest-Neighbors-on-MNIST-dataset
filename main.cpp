@@ -49,7 +49,14 @@ void tc3() { // Test Printing
     cout << "nCols: " << nCols << endl;
 }
 
+void tc4() {
+    Dataset dataset;
+    dataset.loadFromCSV("mnist.csv");
+    Dataset dataset2(dataset);
+    dataset2.printHead(1000, 1000);
+}
+
 int main() {
-    tc3();
+    tc4();
     return 0;
 }
