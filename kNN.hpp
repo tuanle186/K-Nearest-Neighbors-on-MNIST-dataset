@@ -163,6 +163,9 @@ public:
         }
     }
 
+    /*
+     * Not finished, used to optimize printHead method of dataset
+     */
     void printHead(int n) const override {
         if (n < 0 || n > size) {
             throw std::out_of_range("Out of range");
@@ -179,6 +182,9 @@ public:
         }
     }
 
+    /*
+     * Not finished, used to optimize printTail method of dataset
+     */
     void printTail(int n) const override {
         if (n < 0 || n > size) {
             throw std::out_of_range("Out of range");

@@ -3,6 +3,10 @@
 /* TODO: You can implement methods, functions that support your data structures here.
  * */
 
+
+/* Status: Finished
+ *  
+ */
 Dataset::Dataset() {
     colName = new DLinkedList<string>();
     data = new DLinkedList<DLinkedList<int>*>();
@@ -10,6 +14,10 @@ Dataset::Dataset() {
     nCols = 0;
 }
 
+
+/* Status: Finished
+ *  
+ */
 Dataset::~Dataset() {
     nRows = 0;
     nCols = 0;
@@ -19,6 +27,10 @@ Dataset::~Dataset() {
     delete data;
 }
 
+
+/* Status: Not Finished,
+ * not yet implemented deep copy of other dataset
+ */
 Dataset::Dataset(const Dataset& other) {
     /* 
      * The data variable has not been dynamically allocated
@@ -40,20 +52,24 @@ Dataset::Dataset(const Dataset& other) {
     
 }
 
+
+/*
+ *  Status: Not Finished
+ */
 Dataset& Dataset::operator=(const Dataset& other) {
-    // Implement later
 }
 
 
-/*
+/* Status: Finished
+ *
  * This method is used to load data from the file fileName, 
  * specifically in this assignment is the 'mnist.csv' file. 
  * The information in the file will be stored in the variable
  * data and other proposed variables by students.
  * 
  * It returns true if the data loading is successful, otherwise false.
- *
-*/
+ */
+bool DEBUG_dataset_loadFromCSV = true;
 bool Dataset::loadFromCSV(const char* fileName) {
     ifstream file(fileName);
     if (!file) {
@@ -82,14 +98,16 @@ bool Dataset::loadFromCSV(const char* fileName) {
     }
     nRows++;
 
-    // For debugging only
-    cout << "nCols = " << nCols << endl;
-    cout << "nRows = " << nRows << endl;
+    if (DEBUG_dataset_loadFromCSV) {
+        cout << "DEBUGGING Dataset::loadFromCSV\n";
+        cout << "dataset's number of columns = " << nCols << endl;
+        cout << "dataset's number of rows = " << nRows << endl;
+    }
     return true;
 }
 
 
-/*
+/* Status: Not Finished
  * Print the first nRows rows, and only print the first nCols columns of the data table.
 
  * • Print format:
@@ -103,6 +121,7 @@ bool Dataset::loadFromCSV(const char* fileName) {
  * table, print all columns in the data table. If nRows or nCols is less than 0, do not
  * print anything.
 */
+bool DEBUG_dataset_printHead = true;
 void Dataset::printHead(int nRows, int nCols) const {
     if (nRows < 0 || nCols < 0) { // Do not print anything
         return;
@@ -117,19 +136,18 @@ void Dataset::printHead(int nRows, int nCols) const {
 
 
 
-
-
     // For the debugging only: Test printing all    
-    /*
-    // Print column names
-    colName->print();
-    cout << endl;
-    // Print data
-    for (int i = 0; i < this->nRows - 1; i++) {
-        cout << "New line:" << endl;
-        data->get(i)->print();
-    }   
-    */
+    if (DEBUG_dataset_printHead) {
+        // Print first row (column names)
+        colName->print();
+        cout << endl;
+
+        // Print remaining rows (labels and vale)
+        for (int i = 0; i < this->nRows - 1; i++) {
+            cout << "New line: " << endl;
+            data->get(i)->print();
+        }
+    }
 }
 
 
