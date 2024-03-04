@@ -20,6 +20,8 @@ public:
     virtual int length() const = 0 ;
     virtual void clear() = 0;
     virtual void print() const = 0;
+    virtual void printHead(int n) const = 0;
+    virtual void printTail(int n) const = 0;
     virtual void reverse() = 0;
 };
 
@@ -35,6 +37,7 @@ public:
 
         Node(T value) : data(value), next(nullptr), prev(nullptr) {}
     };
+    
 private:
     Node* head;
     Node* tail;
@@ -160,6 +163,42 @@ public:
         }
     }
 
+    void printHead(int n) const override {
+        if (n < 0 || n > size) {
+            throw std::out_of_range("Out of range");
+            return;
+        }
+        Node* current = head;
+        for (int i = 0; i < n; ++i) {
+            if (i < n - 1) {
+                cout << current->data << " ";
+            } else {
+                cout << current->data; // Last element => no trailing space at the end
+            }
+            current = current->next;
+        }
+    }
+
+    void printTail(int n) const override {
+        if (n < 0 || n > size) {
+            throw std::out_of_range("Out of range");
+            return;
+        }
+        Node* current = tail;
+        for (int i = 0; i < n - 1; ++i) {
+            current = current->prev;
+        }
+        
+        while (current != nullptr) {
+            if (current->next != nullptr) {
+                cout << current->data << " ";
+            } else {
+                cout << current->data; // Last element => no trailing space at the end
+            }
+            current = current->next;
+        }
+    }
+
     void reverse() override {
         Node* current = head;
         Node* temp = nullptr;
@@ -181,6 +220,7 @@ public:
 
 class Dataset {
 private:
+    DLinkedList<string>* colName;
     DLinkedList<DLinkedList<int>*>* data;
     int nRows;
     int nCols;

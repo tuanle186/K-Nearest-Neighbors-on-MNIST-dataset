@@ -24,15 +24,29 @@ void tc1(){
 
 void tc2() {
     DLinkedList<int>* list = new DLinkedList<int>();
-    list->push_back(1);
-    list->push_back(3);
-    list->push_front(2);
+    for (int i = 0; i < 10; ++i) {
+        list->push_back(i);
+    }
+    cout << "Print all: ";
     list->print();
+    cout << endl;
+
+    cout << "Print head n = 3: ";
+    list->printHead(3);
+    cout << endl;
+
+    cout << "Print tail n = 4: ";
+    list->printTail(4);
     list->clear();
-    list->print();
+}
+
+void tc3() { // Test Printing
+    Dataset dataset;
+    dataset.loadFromCSV("mnist.csv");
+    dataset.printHead();
 }
 
 int main() {
-    tc2();
+    tc3();
     return 0;
 }
