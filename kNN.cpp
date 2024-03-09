@@ -88,6 +88,7 @@ bool Dataset::loadFromCSV(const char* fileName) {
             nRows++;
         }
     }
+    file.close();
     return true;
 }
 
@@ -144,15 +145,19 @@ void Dataset::columns() const {
 /* Status: Not Finished
 */
 bool Dataset::drop(int axis, int index, std::string columns) {
-    if (axis != 0 || axis != 1) {
+    if (axis != 0 and axis != 1) {
         return false;
     }
 
-    if (axis == 0) {
-        
-
+    if (axis == 0) { // dropping a row
+        if (index >= nRows || index < 0) {
+            return false;
+        }
+        data->get(index)->clear();
+        data->remove(index);
+        nRows--;
+        return true;
     } else {
-
     }
     return false;
 }

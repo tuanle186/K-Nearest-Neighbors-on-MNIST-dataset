@@ -63,7 +63,15 @@ void tc5() {
     dataset.printHead(50,50);
 }
 
+void tc6() {
+    Dataset dataset;
+    dataset.loadFromCSV("mnist.csv");
+    dataset.printHead(2000,5);
+    cout << dataset.drop(0, 198) << endl;
+    dataset.printHead(2000, 5);
+}
+
 int main() {
-    tc4();
+    tc6();
     return 0;
 }
