@@ -59,7 +59,8 @@ void tc4() {
 void tc5() {
     Dataset dataset;
     dataset.loadFromCSV("mnist.csv");
-    List<int>* row = dataset.getData()->get(0);   
+    List<List<int>*>* data = dataset.getData();
+    data->get(0)->print();
 }
 
 int main() {

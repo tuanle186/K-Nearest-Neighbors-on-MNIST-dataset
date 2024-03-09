@@ -9,6 +9,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template<typename T>
+class Node {
+public:
+    T data;
+    Node* next;
+    Node* prev;
+    Node(T value) : data(value), next(nullptr), prev(nullptr) {}
+};
+
+
+template<typename T>
 class List {
 public:
     virtual ~List() = default;
@@ -23,34 +33,26 @@ public:
     virtual void printHead(int n) const = 0;
     virtual void printTail(int n) const = 0;
     virtual void reverse() = 0;
+    virtual Node<T>* getHead() const = 0;
+    virtual Node<T>* getTail() const = 0;
 };
 
 
 template<typename T>
-class DLinkedList : public List<T> {
-public:
-    class Node {
-    public:
-        T data;
-        Node* next;
-        Node* prev;
-
-        Node(T value) : data(value), next(nullptr), prev(nullptr) {}
-    };
-    
+class DLinkedList : public List<T> {        
 private:
-    Node* head;
-    Node* tail;
+    Node<T>* head;
+    Node<T>* tail;
     int size;
 
 public:
     DLinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
-    DLinkedList(const DLinkedList& other) {
+    DLinkedList(const List<T>& other) {
         head = nullptr;
         tail = nullptr;
         size = 0;
-        Node* current = other.head;
+        Node<T>* current = other.getHead();
         while (current != nullptr) {
             push_back(current->data);
             current = current->next;
@@ -62,7 +64,7 @@ public:
     }
 
     void push_back(T value) override {
-        Node* newNode = new Node(value);
+        Node<T>* newNode = new Node<T>(value);
         if (head == nullptr) {
             head = tail = newNode;
         } else {
@@ -74,7 +76,7 @@ public:
     }
 
     void push_front(T value) override {
-        Node* newNode = new Node(value);
+        Node<T>* newNode = new Node<T>(value);
         if (head == nullptr) {
             head = tail = newNode;
         } else {
@@ -94,8 +96,8 @@ public:
         } else if (index == size) {
             push_back(value);
         } else {
-            Node* newNode = new Node(value);
-            Node* current = head;
+            Node<T>* newNode = new Node<T>(value);
+            Node<T>* current = head;
             for (int i = 0; i < index - 1; ++i) {
                 current = current->next;
             }
@@ -111,7 +113,7 @@ public:
         if (index < 0 || index >= size) {
             return;
         }
-        Node* temp;
+        Node<T>* temp;
         if (index == 0) {
             temp = head;
             head = head->next;
@@ -125,7 +127,7 @@ public:
             tail = tail->prev;
             tail->next = nullptr;
         } else {
-            Node* current = head;
+            Node<T>* current = head;
             for (int i = 0; i < index; ++i) {
                 current = current->next;
             }
@@ -141,7 +143,7 @@ public:
         if (index < 0 || index >= size) {
             throw std::out_of_range("get() Out of range");
         }
-        Node* current = head;
+        Node<T>* current = head;
         for (int i = 0; i < index; ++i) {
             current = current->next;
         }
@@ -154,7 +156,7 @@ public:
 
     void clear() override {
         while (head != nullptr) {
-            Node* temp = head;
+            Node<T>* temp = head;
             head = head->next;
             delete temp;
         }
@@ -163,7 +165,7 @@ public:
     }
 
     void print() const override {
-        Node* current = head;
+        Node<T>* current = head;
         while (current != nullptr) {
             if (current->next != nullptr) {
                 cout << current->data << " ";
@@ -180,7 +182,7 @@ public:
             return;
         }
         n = min(n, size);
-        Node* current = head;
+        Node<T>* current = head;
         for (int i = 0; i < n; ++i) {
             if (i < n - 1) {
                 cout << current->data << " ";
@@ -197,7 +199,7 @@ public:
             return;
         }
         n = min(n, size);
-        Node* current = tail;
+        Node<T>* current = tail;
         for (int i = 0; i < n - 1; ++i) {
             current = current->prev;
         }
@@ -213,8 +215,8 @@ public:
     }
 
     void reverse() override {
-        Node* current = head;
-        Node* temp = nullptr;
+        Node<T>* current = head;
+        Node<T>* temp = nullptr;
         while (current != nullptr) {
             temp = current->prev;
             current->prev = current->next;
@@ -224,6 +226,14 @@ public:
         if (temp != nullptr) {
             head = temp->prev;
         }
+    }
+
+    Node<T>* getHead() const override {
+        return head;
+    }
+
+    Node<T>* getTail() const override {
+        return tail;
     }
 };
 
@@ -235,8 +245,8 @@ class Dataset {
 private:
     int nRows;
     int nCols;
-    DLinkedList<string>* colName;
-    DLinkedList<DLinkedList<int>*>* data;
+    List<string>* colName;
+    List<List<int>*>* data;
     //You may need to define more
 public:
     Dataset();

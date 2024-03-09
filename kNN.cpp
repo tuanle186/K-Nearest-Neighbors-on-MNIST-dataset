@@ -8,7 +8,7 @@
  */
 Dataset::Dataset() {
     colName = new DLinkedList<string>();
-    data = new DLinkedList<DLinkedList<int>*>();
+    data = new DLinkedList<List<int>*>();
     nRows = 0;
     nCols = 0;
 }
@@ -27,7 +27,7 @@ Dataset::~Dataset() {
  */
 Dataset::Dataset(const Dataset& other) {
     colName = new DLinkedList<string>(*other.colName);
-    data = new DLinkedList<DLinkedList<int>*>();
+    data = new DLinkedList<List<int>*>();
     other.getShape(nRows, nCols);
     for (int i = 0; i < nRows - 1; ++i) {
         DLinkedList<int>* newRow = new DLinkedList<int>(*other.data->get(i));
@@ -50,7 +50,7 @@ Dataset& Dataset::operator=(const Dataset& other) {
     delete colName;
     colName = new DLinkedList<string>(*other.colName);
     delete data;
-    data = new DLinkedList<DLinkedList<int>*>();
+    data = new DLinkedList<List<int>*>();
     for (int i = 0; i < nRows - 1; ++i) {
         DLinkedList<int>* newRow = new DLinkedList<int>(*other.data->get(i));
         data->push_back(newRow);
@@ -162,23 +162,24 @@ void Dataset::columns() const {
 }
 
 
-// /* Status: Not Finished
-// */
-// bool Dataset::drop(int axis, int index, std::string columns) {
-//     return false;
-// }
+/* Status: Not Finished
+*/
+bool Dataset::drop(int axis, int index, std::string columns) {
+    return false;
+}
 
 
-// /* Status: Not Finished
-// */
-// Dataset Dataset::extract(int startRow, int endRow, int startcol, int endCol) const {
-//     return *this;
-// }
+/* Status: Not Finished
+*/
+Dataset Dataset::extract(int startRow, int endRow, int startcol, int endCol) const {
+    return *this;
+}
 
-
-// DLinkedList<DLinkedList<int>*>* Dataset::getData() const {
-//     return this->data;
-// }
+/* Status: Not Finished
+*/
+List<List<int>*>* Dataset::getData() const {
+    return data;
+}
 
 
 /* Status: Finished
