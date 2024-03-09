@@ -29,7 +29,7 @@ Dataset::Dataset(const Dataset& other) {
     colName = new DLinkedList<string>(*other.colName);
     data = new DLinkedList<List<int>*>();
     other.getShape(nRows, nCols);
-    for (int i = 0; i < nRows - 1; ++i) {
+    for (int i = 0; i < nRows; ++i) {
         DLinkedList<int>* newRow = new DLinkedList<int>(*other.data->get(i));
         data->push_back(newRow);
     }
@@ -51,7 +51,7 @@ Dataset& Dataset::operator=(const Dataset& other) {
     colName = new DLinkedList<string>(*other.colName);
     delete data;
     data = new DLinkedList<List<int>*>();
-    for (int i = 0; i < nRows - 1; ++i) {
+    for (int i = 0; i < nRows; ++i) {
         DLinkedList<int>* newRow = new DLinkedList<int>(*other.data->get(i));
         data->push_back(newRow);
     }
@@ -78,7 +78,6 @@ bool Dataset::loadFromCSV(const char* fileName) {
                 colName->push_back(token);
                 nCols++;
             }
-            nRows++;
             is1stRow = false;
         } else { // Not first Row
             DLinkedList<int>* newRow = new DLinkedList<int>();
@@ -89,43 +88,23 @@ bool Dataset::loadFromCSV(const char* fileName) {
             nRows++;
         }
     }
-
-    if (DEBUG_dataset_loadFromCSV) {
-        cout << "DEBUGGING Dataset::loadFromCSV\n";
-        cout << "dataset's number of columns = " << nCols << endl;
-        cout << "dataset's number of rows = " << nRows << endl;
-    }
     return true;
 }
 
 
 /* Status: Finished
 */
-bool DEBUG_dataset_printHead = false;
 void Dataset::printHead(int nRows, int nCols) const {
     if (nRows <= 0 || nCols <= 0) { // Do not print anything | Note: nRows = 0 || nCols = 0 do what??
         return;
     }
-    nRows = min(nRows, this->nRows - 1); // -1 as 1st row's stored in colName
+    nRows = min(nRows, this->nRows);
     nCols = min(nCols, this->nCols);
     colName->printHead(nCols);
     cout << endl;
     for (int i = 0; i < nRows; ++i) {
         data->get(i)->printHead(nCols);
         cout << endl;
-    }
-
-    // For the debugging only: Test printing all    
-    if (DEBUG_dataset_printHead) {
-        // Print first row (column names)
-        colName->print();
-        cout << endl;
-
-        // Print remaining rows (labels and vale)
-        for (int i = 0; i < this->nRows - 1; i++) {
-            cout << "New line: " << endl;
-            data->get(i)->print();
-        }
     }
 }
 
@@ -136,11 +115,11 @@ void Dataset::printTail(int nRows, int nCols) const {
     if (nRows <= 0 || nCols <= 0) {
         return;
     }
-    nRows = min(nRows, this->nRows - 1); // -1 as 1st row's stored in colName
+    nRows = min(nRows, this->nRows);
     nCols = min(nCols, this->nCols);
     colName->printTail(nCols);
     cout << endl;
-    for (int i = this->nRows - nRows - 1; i < this->nRows - 1; ++i) {
+    for (int i = this->nRows - nRows; i < this->nRows; ++i) {
         data->get(i)->printTail(nCols);
         cout << endl;
     }
@@ -165,6 +144,16 @@ void Dataset::columns() const {
 /* Status: Not Finished
 */
 bool Dataset::drop(int axis, int index, std::string columns) {
+    if (axis != 0 || axis != 1) {
+        return false;
+    }
+
+    if (axis == 0) {
+        
+
+    } else {
+
+    }
     return false;
 }
 
@@ -189,7 +178,7 @@ void Dataset::clear() {
         return;
     }
     colName->clear();
-    for (int i = 0; i < nRows - 1; ++i) {
+    for (int i = 0; i < nRows; ++i) {
         data->get(i)->clear();
     }
     data->clear();

@@ -52,18 +52,18 @@ void tc3() { // Test Printing
 void tc4() {
     Dataset dataset;
     dataset.loadFromCSV("mnist.csv");
-    Dataset dataset2 = dataset;
-    dataset2.printHead();
+    // Dataset dataset2(dataset);
+    // dataset2.printHead();
+    dataset.printTail(5, 5);
 }
 
 void tc5() {
     Dataset dataset;
     dataset.loadFromCSV("mnist.csv");
-    List<List<int>*>* data = dataset.getData();
-    data->get(0)->print();
+    dataset.printHead(50,50);
 }
 
 int main() {
-    tc5();
+    tc4();
     return 0;
 }
