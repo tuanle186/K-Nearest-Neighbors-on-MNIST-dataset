@@ -250,6 +250,7 @@ public:
     void columns() const;
     bool drop(int axis = 0, int index = 0, std::string columns = "");
     Dataset extract(int startRow = 0, int endRow = -1, int startCol = 0, int endCol = -1) const;
+    List<List<int>*>* getData() const;
     void clear();
 };
 

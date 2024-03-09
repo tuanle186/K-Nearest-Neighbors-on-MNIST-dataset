@@ -162,6 +162,25 @@ void Dataset::columns() const {
 }
 
 
+// /* Status: Not Finished
+// */
+// bool Dataset::drop(int axis, int index, std::string columns) {
+//     return false;
+// }
+
+
+// /* Status: Not Finished
+// */
+// Dataset Dataset::extract(int startRow, int endRow, int startcol, int endCol) const {
+//     return *this;
+// }
+
+
+// DLinkedList<DLinkedList<int>*>* Dataset::getData() const {
+//     return this->data;
+// }
+
+
 /* Status: Finished
 */
 void Dataset::clear() {

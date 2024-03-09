@@ -56,7 +56,13 @@ void tc4() {
     dataset2.printHead();
 }
 
+void tc5() {
+    Dataset dataset;
+    dataset.loadFromCSV("mnist.csv");
+    List<int>* row = dataset.getData()->get(0);   
+}
+
 int main() {
-    tc4();
+    tc5();
     return 0;
 }
