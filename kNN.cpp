@@ -64,7 +64,6 @@ Dataset& Dataset::operator=(const Dataset& other) {
 
 /* Status: Finished
  */
-bool DEBUG_dataset_loadFromCSV = false;
 bool Dataset::loadFromCSV(const char* fileName) {
     ifstream file(fileName);
     if (!file) {
