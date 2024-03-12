@@ -189,10 +189,44 @@ bool Dataset::drop(int axis, int index, std::string columns) {
 }
 
 
-/* Status: Not Finished
+/* Status: Finished
+    If endRow == -1, we will take all rows. Similarly with endCol == -1.
+
+    Testcases will ensure that startRow, endRow, startCol, and endCol are within valid
+    range (from 0 to number of rows/number of columns) and start ≤ end.
 */
-Dataset Dataset::extract(int startRow, int endRow, int startcol, int endCol) const {
-    return *this;
+Dataset Dataset::extract(int startRow, int endRow, int startCol, int endCol) const {
+    Dataset extractedDataset;
+    // Preprocessing
+    if (endRow == -1) { // takes all rows
+        startRow = 0;
+        endRow = this->nRows - 1;
+    }
+    if (endCol == -1) { // takes all cols
+        startCol = 0;
+        endCol = this->nCols - 1;
+    }
+
+    // Set the nRows and nCols attribute of extractedDataset
+    extractedDataset.nRows = endRow - startRow + 1;
+    extractedDataset.nCols = endCol - startRow + 1;
+
+    // Set the colName attribute of extractedDataset
+    for (int i = startCol; i <= endCol; ++i) {
+        extractedDataset.colName->push_back(colName->get(i));
+    }
+
+    // Set the data attribute of extractedDataset
+    for (int i = startRow; i <= endRow; ++i) {
+        List<int>* currentRow = this->data->get(i);
+        DLinkedList<int>* extractedRow = new DLinkedList<int>();
+        for (int j = startCol; j <= endCol; ++j) {
+            extractedRow->push_back(currentRow->get(j));
+        }
+        extractedDataset.data->push_back(extractedRow);
+    }
+    
+    return extractedDataset;
 }
 
 /* Status: Finished
