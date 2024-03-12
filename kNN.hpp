@@ -35,6 +35,7 @@ public:
     virtual void reverse() = 0;
     virtual Node<T>* getHead() const = 0;
     virtual Node<T>* getTail() const = 0;
+    virtual int getIndexOf(T item) const = 0;
 };
 
 
@@ -234,6 +235,21 @@ public:
 
     Node<T>* getTail() const override {
         return tail;
+    }
+
+    int getIndexOf(T item) const override {
+        int index = 0;
+        Node<T>* current = head;
+        while (current != nullptr && current->data != item) {
+            current = current->next;
+            index++;
+        }
+
+        if (current != nullptr) {
+            return index;
+        } else {
+            return -1; // Item not found
+        }
     }
 };
 

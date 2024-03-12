@@ -3,6 +3,9 @@
 /* TODO: You can implement methods, functions that support your data structures here.
  * */
 
+// Debugging Flag to print out errors
+bool DEBUGGING = true;
+
 
 /* Status: Finished
  */
@@ -142,22 +145,46 @@ void Dataset::columns() const {
 }
 
 
-/* Status: Not Finished
+/* Status: Finished
 */
 bool Dataset::drop(int axis, int index, std::string columns) {
-    if (axis != 0 and axis != 1) {
+    if (axis != 0 && axis != 1) {
+        if (DEBUGGING) {
+            cout << "axis is not 0 or 1" << endl;
+        }
         return false;
     }
 
     if (axis == 0) { // dropping a row
         if (index >= nRows || index < 0) {
+            if (DEBUGGING) {
+                cout << "Index out of bound, fail to drop a col" << endl;
+            }
             return false;
         }
         data->get(index)->clear();
         data->remove(index);
         nRows--;
         return true;
-    } else {
+    } else { // dropping a column
+        int colIndex = colName->getIndexOf(columns);
+        if (colIndex == -1) {
+            if (DEBUGGING) {
+                cout << "Column's name not found, failed to drop a col" << endl;
+            }
+            return false;
+        }
+
+        colName->remove(colIndex);
+        for (int i = 0; i < nRows; ++i) {
+            data->get(i)->remove(colIndex);
+        }
+        nCols--;
+        return true;
+    }
+
+    if (DEBUGGING) {
+        cout << "Failed to drop a row or a col" << endl;
     }
     return false;
 }
@@ -169,7 +196,7 @@ Dataset Dataset::extract(int startRow, int endRow, int startcol, int endCol) con
     return *this;
 }
 
-/* Status: Not Finished
+/* Status: Finished
 */
 List<List<int>*>* Dataset::getData() const {
     return data;

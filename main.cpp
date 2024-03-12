@@ -66,9 +66,14 @@ void tc5() {
 void tc6() {
     Dataset dataset;
     dataset.loadFromCSV("mnist.csv");
-    dataset.printHead(2000,5);
-    cout << dataset.drop(0, 198) << endl;
-    dataset.printHead(2000, 5);
+    dataset.printHead(5, 5);
+    // drop all rows
+    for (int i = 0; i < 198; ++i) {
+        dataset.drop(0, dataset.getData()->length() - 1);
+        // cout << dataset.drop(0, i) << endl;
+    }
+    cout << dataset.getData()->length() << endl;
+    dataset.printHead(5, 5);
 }
 
 int main() {
