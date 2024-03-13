@@ -103,7 +103,7 @@ bool Dataset::loadFromCSV(const char* fileName) {
 /* Status: Finished
 */
 void Dataset::printHead(int nRows, int nCols) const {
-    if (nRows <= 0 || nCols <= 0) { // Do not print anything | Note: nRows = 0 || nCols = 0 do what??
+    if (nRows < 0 || nCols <= 0) { // Do not print anything | Note: nRows = 0 || nCols = 0 do what??
         return;
     }
     nRows = min(nRows, this->nRows);
@@ -120,7 +120,7 @@ void Dataset::printHead(int nRows, int nCols) const {
 /* Status: Finished
 */
 void Dataset::printTail(int nRows, int nCols) const {
-    if (nRows <= 0 || nCols <= 0) {
+    if (nRows < 0 || nCols <= 0) {
         return;
     }
     nRows = min(nRows, this->nRows);
