@@ -4,7 +4,12 @@
  * */
 
 // Debugging Flag to print out errors
-bool DEBUGGING = true;
+bool DEBUGGING_DATASET = true;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// DATASET INNER-CLASS DEFINITION //////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /* Status: Finished
@@ -148,7 +153,7 @@ void Dataset::columns() const {
 */
 bool Dataset::drop(int axis, int index, std::string columns) {
     if (axis != 0 && axis != 1) {
-        if (DEBUGGING) {
+        if (DEBUGGING_DATASET) {
             cout << "axis is not 0 or 1" << endl;
         }
         return false;
@@ -156,7 +161,7 @@ bool Dataset::drop(int axis, int index, std::string columns) {
 
     if (axis == 0) { // dropping a row
         if (index >= nRows || index < 0) {
-            if (DEBUGGING) {
+            if (DEBUGGING_DATASET) {
                 cout << "Index out of bound, fail to drop a col" << endl;
             }
             return false;
@@ -168,7 +173,7 @@ bool Dataset::drop(int axis, int index, std::string columns) {
     } else { // dropping a column
         int colIndex = colName->getIndexOf(columns);
         if (colIndex == -1) {
-            if (DEBUGGING) {
+            if (DEBUGGING_DATASET) {
                 cout << "Column's name not found, failed to drop a col" << endl;
             }
             return false;
@@ -182,7 +187,7 @@ bool Dataset::drop(int axis, int index, std::string columns) {
         return true;
     }
 
-    if (DEBUGGING) {
+    if (DEBUGGING_DATASET) {
         cout << "Failed to drop a row or a col" << endl;
     }
     return false;
@@ -250,4 +255,9 @@ void Dataset::clear() {
     nRows = 0;
     nCols = 0;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////// kNN INNER-CLASS DEFINITION ////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
 
