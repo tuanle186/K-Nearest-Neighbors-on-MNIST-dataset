@@ -287,6 +287,8 @@ public:
 class kNN {
 private:
     int k;
+    Dataset X_train;
+    Dataset y_train;
     //You may need to define more
 public:
     kNN(int k = 5);

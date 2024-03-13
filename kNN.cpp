@@ -204,17 +204,15 @@ Dataset Dataset::extract(int startRow, int endRow, int startCol, int endCol) con
     Dataset extractedDataset;
     // Preprocessing
     if (endRow == -1) { // takes all rows
-        startRow = 0;
         endRow = this->nRows - 1;
     }
     if (endCol == -1) { // takes all cols
-        startCol = 0;
         endCol = this->nCols - 1;
     }
 
     // Set the nRows and nCols attribute of extractedDataset
     extractedDataset.nRows = endRow - startRow + 1;
-    extractedDataset.nCols = endCol - startRow + 1;
+    extractedDataset.nCols = endCol - startCol + 1;
 
     // Set the colName attribute of extractedDataset
     for (int i = startCol; i <= endCol; ++i) {
@@ -261,3 +259,41 @@ void Dataset::clear() {
 //////////////////////////////////// kNN INNER-CLASS DEFINITION ////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+
+void kNN::fit(const Dataset& X_train, const Dataset& y_train) {
+    this->X_train = X_train;
+    this->y_train = y_train;
+}
+
+
+Dataset kNN::predict(const Dataset& X_test) {
+
+}
+
+
+double kNN::score(const Dataset& y_test, const Dataset& y_pred) {
+
+}
+
+
+
+void train_test_split(  Dataset& X,           // Input: features
+                        Dataset& y,           // Input: labels
+                        double test_size,     // Input: test_size (0, 1)
+                        Dataset& X_train,     // Output
+                        Dataset& X_test,      // Output
+                        Dataset& y_train,     // Output
+                        Dataset& y_test)      // Output
+{
+    // Preprocessing
+    int nRows_original, nCols_original;
+    X.getShape(nRows_original, nCols_original);
+    int nRows_test = ceil(test_size*nRows_original);
+    int nRows_train = nRows_original - nRows_test;
+
+    // Extracting
+    X_train = X.extract(0, nRows_train - 1, 0, -1);
+    X_test = X.extract(nRows_train, -1, 0, -1);
+    y_train = y.extract(0, nRows_train - 1, 0, -1);
+    y_test = y.extract(nRows_train, -1, 0, -1);
+}
