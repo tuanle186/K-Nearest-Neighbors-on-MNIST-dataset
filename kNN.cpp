@@ -282,36 +282,40 @@ Dataset kNN::predict(const Dataset& X_test) {
         3. Calculate the Euclidan Distance between two images
         4. Store the calculated distance into the coressponding row of y_train
     */
-    int nRows_X_test, nCols_X;
-    X_test.getShape(nRows_X_test, nCols_X);
 
-    int nRows_X_train;
-    X_train.getShape(nRows_X_train, nCols_X);
-
+    // Preprocessing
     List<List<int>*>* X_test_data = X_test.getData();
     List<List<int>*>* X_train_data = X_train.getData();
-
-    // temporary dataset for sorting and processing
-    Dataset tmp = this->y_train;
-    List<List<int>*>* tmp_data = tmp.getData();
-
+    Node<List<int>*>* current_row_X_test = X_test_data->getHead();
+    Node<List<int>*>* current_row_X_train = X_train_data->getHead();
+    Node<int>* current_col_X_test;
+    Node<int>* current_col_X_train;
     int sum, a, b;
     double distance;
-    for (int i = 0; i < nRows_X_test; ++i) {
-        for (int j = 0; j < nRows_X_train; ++j) {
+    // temporary dataset for sorting and processing
+    Dataset y_train_tmp = this->y_train;
+    List<List<int>*>* y_train_tmp_data = y_train_tmp.getData();
+    Node<List<int>*>* current_row_y_train_tmp = y_train_tmp_data->getHead();
+
+    while (current_row_X_test != nullptr) {
+        current_row_X_train = X_train_data->getHead();
+        while (current_row_X_train != nullptr) {
             sum = 0;
-            for (int k = 0; k < nCols_X; ++k) {
-                a = X_test_data->get(i)->get(k);
-                b = X_train_data->get(j)->get(k);
+            current_col_X_test = current_row_X_test->data->getHead();
+            current_col_X_train = current_row_X_train->data->getHead();
+            while (current_col_X_test != nullptr && current_row_X_train != nullptr) {
+                a = current_col_X_test->data;
+                b = current_col_X_train->data;
                 sum += pow(a - b, 2);
+                current_col_X_test = current_col_X_test->next;
+                current_col_X_train = current_col_X_train->next;
             }
             distance = sqrt(sum);
-            // After having finished calculating distance, add to tmp_data
-
+            // cout << "Distance = " << distance << endl;
+            current_row_X_train = current_row_X_train->next;
         }
-        break;
+        current_row_X_test = current_row_X_test->next;
     }
-    return tmp;
 }
 
 

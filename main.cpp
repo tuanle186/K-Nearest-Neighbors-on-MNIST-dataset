@@ -86,6 +86,18 @@ void tc3() {
     knn.predict(X_test);
 }
 
+void tc4() {
+    Dataset dataset;
+    dataset.loadFromCSV("mnist.csv");
+    dataset.printHead(10, 10);
+    cout << endl;
+    dataset.printTail(10, 10);
+    cout << endl;
+    int nRows, nCols;
+    dataset.getShape(nRows, nCols);
+    cout << "Shape: " << nRows << "x" << nCols << endl;
+}
+
 int main() {
     tc3();
     return 0;
