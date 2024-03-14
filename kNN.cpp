@@ -112,7 +112,9 @@ void Dataset::printHead(int nRows, int nCols) const {
     cout << endl;
     for (int i = 0; i < nRows; ++i) {
         data->get(i)->printHead(nCols);
-        cout << endl;
+        if (i < nRows - 1) {
+            cout << endl;
+        }
     }
 }
 
@@ -129,7 +131,9 @@ void Dataset::printTail(int nRows, int nCols) const {
     cout << endl;
     for (int i = this->nRows - nRows; i < this->nRows; ++i) {
         data->get(i)->printTail(nCols);
-        cout << endl;
+        if (i < this->nRows - 1) {
+            cout << endl;
+        }
     }
 }
 
@@ -232,6 +236,7 @@ Dataset Dataset::extract(int startRow, int endRow, int startCol, int endCol) con
     return extractedDataset;
 }
 
+
 /* Status: Finished
 */
 List<List<int>*>* Dataset::getData() const {
@@ -259,6 +264,10 @@ void Dataset::clear() {
 //////////////////////////////////// kNN INNER-CLASS DEFINITION ////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+kNN::kNN(int k) {
+    this->k = k;
+}
+
 
 void kNN::fit(const Dataset& X_train, const Dataset& y_train) {
     this->X_train = X_train;
@@ -267,12 +276,47 @@ void kNN::fit(const Dataset& X_train, const Dataset& y_train) {
 
 
 Dataset kNN::predict(const Dataset& X_test) {
+    /* Algorithms:
+        1. Loop through each row (image) in X_test
+        2. Loop through each col (feature) in X_test and X_train
+        3. Calculate the Euclidan Distance between two images
+        4. Store the calculated distance into the coressponding row of y_train
+    */
+    int nRows_X_test, nCols_X;
+    X_test.getShape(nRows_X_test, nCols_X);
 
+    int nRows_X_train;
+    X_train.getShape(nRows_X_train, nCols_X);
+
+    List<List<int>*>* X_test_data = X_test.getData();
+    List<List<int>*>* X_train_data = X_train.getData();
+
+    // temporary dataset for sorting and processing
+    Dataset tmp = this->y_train;
+    List<List<int>*>* tmp_data = tmp.getData();
+
+    int sum, a, b;
+    double distance;
+    for (int i = 0; i < nRows_X_test; ++i) {
+        for (int j = 0; j < nRows_X_train; ++j) {
+            sum = 0;
+            for (int k = 0; k < nCols_X; ++k) {
+                a = X_test_data->get(i)->get(k);
+                b = X_train_data->get(j)->get(k);
+                sum += pow(a - b, 2);
+            }
+            distance = sqrt(sum);
+            // After having finished calculating distance, add to tmp_data
+
+        }
+        break;
+    }
+    return tmp;
 }
 
 
 double kNN::score(const Dataset& y_test, const Dataset& y_pred) {
-
+    return 0.0;
 }
 
 
