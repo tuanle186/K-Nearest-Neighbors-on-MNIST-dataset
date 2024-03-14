@@ -269,6 +269,8 @@ void Dataset::setShape(int nRows, int nCols) {
     this->nRows = nRows;
     this->nCols = nCols;
 }
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////// kNN INNER-CLASS DEFINITION ////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -286,30 +288,35 @@ void kNN::fit(const Dataset& X_train, const Dataset& y_train) {
 
 Dataset kNN::predict(const Dataset& X_test) {
     // Preprocessing
+    // Prepare necessary vars of X_test
     List<List<int>*>* X_test_data = X_test.getData();
-    List<List<int>*>* X_train_data = X_train.getData();
     Node<List<int>*>* current_row_X_test = X_test_data->getHead();
-    Node<List<int>*>* current_row_X_train = X_train_data->getHead();
     Node<int>* current_col_X_test;
+    int nRows_X_test, nCols_X_test;
+    X_test.getShape(nRows_X_test, nCols_X_test);
+
+    // Prepare necessary vars of X_train
+    List<List<int>*>* X_train_data = X_train.getData();
+    Node<List<int>*>* current_row_X_train = X_train_data->getHead();
     Node<int>* current_col_X_train;
 
+    // Prepare necessary vars of y_train
+    List<List<int>*>* y_train_data = y_train.getData();
+    Node<List<int>*>* current_row_y_train = y_train_data->getHead();
+    Node<int>* current_col_y_train;
+    
+    // Prepare y_pred to store predicted label
     Dataset y_pred;
     List<List<int>*>* y_pred_data = y_pred.getData();
     Node<List<int>*>* current_row_y_pred = y_pred_data->getHead();
-    int nRows_X_test, nCols_X_test;
-    X_test.getShape(nRows_X_test, nCols_X_test);
     y_pred.setShape(nRows_X_test, 1);
     List<string>* y_pred_colName = y_pred.getColName();
     y_pred_colName->push_back("label");
 
-    int sum, a, b, pred_label;
-    double distance;
-
-    List<List<int>*>* y_train_data = y_train.getData();
-    Node<List<int>*>* current_row_y_train = y_train_data->getHead();
-    Node<int>* current_col_y_train;
-
+    // Prepare other necessary vars
     kNN_List* list = new kNN_List();
+    int sum, feature_X_test, feature_X_train, prediced_label;
+    double distance;
 
     while (current_row_X_test != nullptr) {
         current_row_X_train = X_train_data->getHead();
@@ -320,9 +327,9 @@ Dataset kNN::predict(const Dataset& X_test) {
             current_col_X_train = current_row_X_train->data->getHead();
             current_col_y_train = current_row_y_train->data->getHead();
             while (current_col_X_test != nullptr && current_row_X_train != nullptr) {
-                a = current_col_X_test->data;
-                b = current_col_X_train->data;
-                sum += pow(a - b, 2);
+                feature_X_test = current_col_X_test->data;
+                feature_X_train = current_col_X_train->data;
+                sum += pow(feature_X_test - feature_X_train, 2);
                 current_col_X_test = current_col_X_test->next;
                 current_col_X_train = current_col_X_train->next;
             }
@@ -332,29 +339,41 @@ Dataset kNN::predict(const Dataset& X_test) {
             current_row_y_train = current_row_y_train->next;
         }
         list->sort();
-        pred_label = list->get_common_label(this->k);
+        prediced_label = list->get_common_label(this->k);
         List<int>* newRow_y_pred = new DLinkedList<int>();
-        newRow_y_pred->push_back(pred_label);
+        newRow_y_pred->push_back(prediced_label);
         y_pred_data->push_back(newRow_y_pred);
         list->clear();
         current_row_X_test = current_row_X_test->next;
     }
+    delete list;
     return y_pred;
-}
-
-int kNN::sort_and_get_common(kNN_List* list) {
-    list->sort();
-    list->print();
-    cout << endl;
-    cout << "Prediction of X_test_row_1: " << list->get_common_label(this->k) << endl;
-    return 0;
 }
 
 
 double kNN::score(const Dataset& y_test, const Dataset& y_pred) {
-    return 0.0;
-}
+    List<List<int>*>* y_test_data = y_test.getData();
+    List<List<int>*>* y_pred_data = y_pred.getData();
 
+    Node<List<int>*>* current_row_y_test = y_test_data->getHead();
+    Node<List<int>*>* current_row_y_pred = y_pred_data->getHead();
+    int n_correct_prediction = 0; // counting correct prediction
+    int a, b;
+    while (current_row_y_test != nullptr && current_row_y_test != nullptr) {
+        a = current_row_y_test->data->getHead()->data;
+        b = current_row_y_pred->data->getHead()->data;
+        if (a == b) {
+            n_correct_prediction++;
+        }
+        current_row_y_test = current_row_y_test->next;
+        current_row_y_pred = current_row_y_pred->next;
+    }
+
+    int n_prediction, dummy;
+    y_test.getShape(n_prediction, dummy);
+    double accuracy = n_correct_prediction/double(n_prediction);
+    return accuracy;
+}
 
 
 void train_test_split(  Dataset& X,           // Input: features

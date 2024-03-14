@@ -298,7 +298,6 @@ public:
     kNN(int k = 5);
     void fit(const Dataset& X_train, const Dataset& y_train);
     Dataset predict(const Dataset& X_test);
-    int sort_and_get_common(kNN_List* list);
     double score(const Dataset& y_test, const Dataset& y_pred);
 
 private:
@@ -313,7 +312,6 @@ private:
             this->next = nullptr;
         }
     };
-
 
     class kNN_List {
     private:
@@ -394,6 +392,9 @@ private:
         }
 
         int get_common_label(int k) {
+            if (head == nullptr) {
+                return -1;
+            }
             int record[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Since there are just 10 digits (types of labels)
             kNN_Node* current = head;
             for (int i = 0; i < k; ++i) {
@@ -415,8 +416,3 @@ void train_test_split(Dataset& X, Dataset& y, double test_size,
                         Dataset& X_train, Dataset& X_test, Dataset& y_train, Dataset& y_test);
 
 // Please add more or modify as needed
-
-
-////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////// HASH CLASS FORWARD DECLARATION /////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
