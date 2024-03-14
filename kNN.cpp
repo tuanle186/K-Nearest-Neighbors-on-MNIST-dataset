@@ -244,6 +244,11 @@ List<List<int>*>* Dataset::getData() const {
 }
 
 
+List<string>* Dataset::getColName() const {
+    return colName;
+}
+
+
 /* Status: Finished
 */
 void Dataset::clear() {
@@ -260,6 +265,10 @@ void Dataset::clear() {
 }
 
 
+void Dataset::setShape(int nRows, int nCols) {
+    this->nRows = nRows;
+    this->nCols = nCols;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////// kNN INNER-CLASS DEFINITION ////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,13 +285,6 @@ void kNN::fit(const Dataset& X_train, const Dataset& y_train) {
 
 
 Dataset kNN::predict(const Dataset& X_test) {
-    /* Algorithms:
-        1. Loop through each row (image) in X_test
-        2. Loop through each col (feature) in X_test and X_train
-        3. Calculate the Euclidan Distance between two images
-        4. Store the calculated distance into the coressponding row of y_train
-    */
-
     // Preprocessing
     List<List<int>*>* X_test_data = X_test.getData();
     List<List<int>*>* X_train_data = X_train.getData();
@@ -290,19 +292,33 @@ Dataset kNN::predict(const Dataset& X_test) {
     Node<List<int>*>* current_row_X_train = X_train_data->getHead();
     Node<int>* current_col_X_test;
     Node<int>* current_col_X_train;
-    int sum, a, b;
+
+    Dataset y_pred;
+    List<List<int>*>* y_pred_data = y_pred.getData();
+    Node<List<int>*>* current_row_y_pred = y_pred_data->getHead();
+    int nRows_X_test, nCols_X_test;
+    X_test.getShape(nRows_X_test, nCols_X_test);
+    y_pred.setShape(nRows_X_test, 1);
+    List<string>* y_pred_colName = y_pred.getColName();
+    y_pred_colName->push_back("label");
+
+    int sum, a, b, pred_label;
     double distance;
-    // temporary dataset for sorting and processing
-    Dataset y_train_tmp = this->y_train;
-    List<List<int>*>* y_train_tmp_data = y_train_tmp.getData();
-    Node<List<int>*>* current_row_y_train_tmp = y_train_tmp_data->getHead();
+
+    List<List<int>*>* y_train_data = y_train.getData();
+    Node<List<int>*>* current_row_y_train = y_train_data->getHead();
+    Node<int>* current_col_y_train;
+
+    kNN_List* list = new kNN_List();
 
     while (current_row_X_test != nullptr) {
         current_row_X_train = X_train_data->getHead();
+        current_row_y_train = y_train_data->getHead();
         while (current_row_X_train != nullptr) {
             sum = 0;
             current_col_X_test = current_row_X_test->data->getHead();
             current_col_X_train = current_row_X_train->data->getHead();
+            current_col_y_train = current_row_y_train->data->getHead();
             while (current_col_X_test != nullptr && current_row_X_train != nullptr) {
                 a = current_col_X_test->data;
                 b = current_col_X_train->data;
@@ -311,11 +327,27 @@ Dataset kNN::predict(const Dataset& X_test) {
                 current_col_X_train = current_col_X_train->next;
             }
             distance = sqrt(sum);
-            // cout << "Distance = " << distance << endl;
+            list->push_back(current_col_y_train->data, distance);
             current_row_X_train = current_row_X_train->next;
+            current_row_y_train = current_row_y_train->next;
         }
+        list->sort();
+        pred_label = list->get_common_label(this->k);
+        List<int>* newRow_y_pred = new DLinkedList<int>();
+        newRow_y_pred->push_back(pred_label);
+        y_pred_data->push_back(newRow_y_pred);
+        list->clear();
         current_row_X_test = current_row_X_test->next;
     }
+    return y_pred;
+}
+
+int kNN::sort_and_get_common(kNN_List* list) {
+    list->sort();
+    list->print();
+    cout << endl;
+    cout << "Prediction of X_test_row_1: " << list->get_common_label(this->k) << endl;
+    return 0;
 }
 
 

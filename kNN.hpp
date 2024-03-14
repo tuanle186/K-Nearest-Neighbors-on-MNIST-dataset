@@ -277,7 +277,9 @@ public:
     bool drop(int axis = 0, int index = 0, std::string columns = "");
     Dataset extract(int startRow = 0, int endRow = -1, int startCol = 0, int endCol = -1) const;
     List<List<int>*>* getData() const;
+    List<string>* getColName() const;
     void clear();
+    void setShape(int nRows, int nCols);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -289,12 +291,124 @@ private:
     int k;
     Dataset X_train;
     Dataset y_train;
+    struct kNN_Node; // class forward declaration
+    class kNN_List; // class forward declaration
     //You may need to define more
 public:
     kNN(int k = 5);
     void fit(const Dataset& X_train, const Dataset& y_train);
     Dataset predict(const Dataset& X_test);
+    int sort_and_get_common(kNN_List* list);
     double score(const Dataset& y_test, const Dataset& y_pred);
+
+private:
+    struct kNN_Node {
+        int label;
+        double distance;
+        kNN_Node* next;
+
+        kNN_Node(int label, double distance) {
+            this->label = label;
+            this->distance = distance;
+            this->next = nullptr;
+        }
+    };
+
+
+    class kNN_List {
+    private:
+        kNN_Node* head;
+        kNN_Node* tail;
+
+        void swap(kNN_Node* a, kNN_Node* b) {
+            int label_tmp = a->label;
+            a->label = b->label;
+            b->label = label_tmp;
+            double distance_tmp = a->distance;
+            a->distance = b->distance;
+            b->distance = distance_tmp;
+        }
+
+    public:
+        kNN_List() {
+            head = nullptr;
+        }
+
+        ~kNN_List() {
+            clear();
+        }
+
+        void push_back(int label, double distance) {
+            if (head == nullptr) {
+                head = new kNN_Node(label, distance);
+                tail = head;
+            } else {
+                tail->next = new kNN_Node(label, distance);
+                tail = tail->next;
+            }
+        }
+
+        void print() {
+            kNN_Node* current = head;
+            while (current != nullptr) {
+                cout << "Label: " << current->label << " - Distance: " << current->distance << endl;
+                current = current->next;
+            }
+            cout << endl;
+        }
+
+        void sort() {
+            if (head == nullptr || head->next == nullptr) {
+                return;
+            }
+
+            kNN_Node* current;
+            kNN_Node* last = nullptr;
+            bool swapped = false;
+            do {
+                swapped = false;
+                current = head;
+                kNN_Node* prev = nullptr;
+
+                while (current->next != last) {
+                    if (current->distance > current->next->distance) {
+                        swap(current, current->next);
+                        swapped = true;
+                    }
+                    prev = current;
+                    current = current->next;
+                }
+                last = current;
+            } while (swapped);
+        }
+
+        void clear() {
+            kNN_Node* current = head;
+            while (current != nullptr) {
+                kNN_Node* next = current->next;
+                delete current;
+                current = next;
+            }
+            head = nullptr;
+            tail = nullptr;
+        }
+
+        int get_common_label(int k) {
+            int record[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Since there are just 10 digits (types of labels)
+            kNN_Node* current = head;
+            for (int i = 0; i < k; ++i) {
+                record[current->label]++;
+                current = current->next;
+            }
+            int max_idx = 0;
+            for (int i = 0; i < 10; ++i) {
+                if (record[i] > record[max_idx]) {
+                    max_idx = i;
+                }
+            }
+            return max_idx;
+        }
+    };
 };
 
 void train_test_split(Dataset& X, Dataset& y, double test_size, 
@@ -306,4 +420,3 @@ void train_test_split(Dataset& X, Dataset& y, double test_size,
 ////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////// HASH CLASS FORWARD DECLARATION /////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
-
