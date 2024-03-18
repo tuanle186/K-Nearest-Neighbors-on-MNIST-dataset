@@ -288,19 +288,19 @@ void kNN::fit(const Dataset& X_train, const Dataset& y_train) {
 
 Dataset kNN::predict(const Dataset& X_test) {
     // Preprocessing
-    // Prepare necessary vars of X_test
+    // Prepare necessary vars of X_test traversing
     List<List<int>*>* X_test_data = X_test.getData();
     Node<List<int>*>* current_row_X_test = X_test_data->getHead();
     Node<int>* current_col_X_test;
     int nRows_X_test, nCols_X_test;
     X_test.getShape(nRows_X_test, nCols_X_test);
 
-    // Prepare necessary vars of X_train
+    // Prepare necessary vars of X_train traversing
     List<List<int>*>* X_train_data = X_train.getData();
     Node<List<int>*>* current_row_X_train = X_train_data->getHead();
     Node<int>* current_col_X_train;
 
-    // Prepare necessary vars of y_train
+    // Prepare necessary vars of y_train traversing
     List<List<int>*>* y_train_data = y_train.getData();
     Node<List<int>*>* current_row_y_train = y_train_data->getHead();
     Node<int>* current_col_y_train;

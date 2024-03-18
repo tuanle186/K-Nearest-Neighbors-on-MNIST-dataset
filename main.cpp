@@ -136,7 +136,24 @@ void tc6() {
     cout << "Accuracy: " << accuracy << endl;
 }
 
+void tc7() {
+    Dataset dataset;
+    Dataset dataset2(dataset);
+}
+
+void tc1002()
+{
+Dataset dataset;
+dataset.loadFromCSV("mnist.csv");
+List<int> *row = dataset.getData()->get(0);
+
+row->push_back(2);
+
+cout << row->length() << endl;
+row->print();
+}
+
 int main() {
-    tc6();
+    tc1002();
     return 0;
 }
