@@ -141,19 +141,16 @@ void tc7() {
     Dataset dataset2(dataset);
 }
 
-void tc1002()
+void tc1075()
 {
 Dataset dataset;
 dataset.loadFromCSV("mnist.csv");
 List<int> *row = dataset.getData()->get(0);
 
-row->push_back(2);
-
-cout << row->length() << endl;
-row->print();
+cout << row->get(-1);
 }
 
 int main() {
-    tc1002();
+    tc1075();
     return 0;
 }
