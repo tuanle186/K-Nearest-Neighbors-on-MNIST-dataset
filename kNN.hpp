@@ -142,7 +142,7 @@ public:
 
     T& get(int index) const override {
         if (index < 0 || index >= size) {
-            throw std::out_of_range("Out of range");
+            throw std::out_of_range("get(): Out of range");
         }
         Node<T>* current = head;
         for (int i = 0; i < index; ++i) {
@@ -168,15 +168,13 @@ public:
     void print() const override {
         Node<T>* current = head;
         while (current != nullptr) {
-            // if (current->next != nullptr) {
-            //     cout << current->data << " ";
-            // } else {
-            //     cout << current->data; // Last element => no trailing space at the end
-            // }
-            cout << current->data << " ";
+            if (current->next != nullptr) {
+                cout << current->data << " ";
+            } else {
+                cout << current->data; // Last element => no trailing space at the end
+            }
             current = current->next;
         }
-        cout << endl;
     }
 
     void printHead(int n=5) const override {

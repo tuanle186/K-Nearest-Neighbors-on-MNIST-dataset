@@ -71,7 +71,7 @@ Dataset& Dataset::operator=(const Dataset& other) {
 bool Dataset::loadFromCSV(const char* fileName) {
     ifstream file(fileName);
     if (!file) {
-        cerr << "Error: Unable to open file " << fileName << endl;
+        // cerr << "Error: Unable to open file " << fileName << endl;
         return false;
     }
     bool is1stRow = true;
