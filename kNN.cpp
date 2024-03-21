@@ -217,6 +217,10 @@ Dataset Dataset::extract(int startRow, int endRow, int startCol, int endCol) con
     extractedDataset.nRows = endRow - startRow + 1;
     extractedDataset.nCols = endCol - startCol + 1;
 
+    if (extractedDataset.nRows < 0 || extractedDataset.nCols < 0) {
+        throw std::out_of_range("get(): Out of range");
+    }
+
     // Set the colName attribute of extractedDataset
     for (int i = startCol; i <= endCol; ++i) {
         extractedDataset.colName->push_back(colName->get(i));
@@ -291,6 +295,7 @@ Dataset kNN::predict(const Dataset& X_test) {
     List<List<int>*>* X_test_data = X_test.getData();
     Node<List<int>*>* current_row_X_test = X_test_data->getHead();
     Node<int>* current_col_X_test;
+    
     int nRows_X_test, nCols_X_test;
     X_test.getShape(nRows_X_test, nCols_X_test);
 
@@ -298,6 +303,13 @@ Dataset kNN::predict(const Dataset& X_test) {
     List<List<int>*>* X_train_data = X_train.getData();
     Node<List<int>*>* current_row_X_train = X_train_data->getHead();
     Node<int>* current_col_X_train;
+
+    int nRows_X_train, nCols_X_train;
+    X_train.getShape(nRows_X_train, nCols_X_train);
+
+    if (this->k > nRows_X_train) {
+        throw std::out_of_range("get(): Out of range");
+    }
 
     // Prepare necessary vars of y_train traversing
     List<List<int>*>* y_train_data = y_train.getData();

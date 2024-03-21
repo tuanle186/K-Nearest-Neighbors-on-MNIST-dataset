@@ -330,6 +330,7 @@ private:
     public:
         kNN_List() {
             head = nullptr;
+            tail = nullptr;
         }
 
         ~kNN_List() {
